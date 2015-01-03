@@ -4,7 +4,7 @@ treasureOut = 0
 hazardsGame = [3,3,3,3,3]
 hazardsRound = [3,3,3,3,3]
 hazardsTable = [0,0,0,0,0]
-
+#craycray
 artifacts = 1
 goldOwned = 0
 round = 1
