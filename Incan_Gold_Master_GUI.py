@@ -164,87 +164,92 @@ def infomessage():
 	tellType(messageList)
 	messageText = '\n'.join(messageList)
 	gui.msgbox(messageText, "Statistics for this coming turn")
-	 
-
-gui.msgbox("Hello, and welcome to the Incan Gold Master Program", "Welcome")
-
-players = gui.integerbox("How many players", "Set up", 4, 0, 20)
-
-playersLeft = players
-global playersLeft
-
-msg = "Okay, there are " + str(players) + " players."
-gui.msgbox(msg, "Set up")
-
-for round in range(1,5):
-	while roundNotOver():
-		if redo:
-			print("redo")
-		redo = False
-		
-		textInfoMsg()
-		infomessage()
-		
-		playersTurnBackMsg()
-		
-		typeCard()
-		
-
-		if turnType == "treasure" or turnType == "t":
-			tressureValue()
+	
+def setUp():
+	gui.msgbox("Hello, and welcome to the Incan Gold Master Program", "Welcome")
+	players = gui.integerbox("How many players", "Set up", 4, 0, 20)
+	playersLeft = players
+	global playersLeft
+	
+	msg = "Okay, there are " + str(players) + " players."
+	gui.msgbox(msg, "Set up")
+	
+def mainFunction():
+	setUp()
+	
+	#this for loop represents counting the rounds
+	for round in range(1,5):
+		#this while loop is a round
+		while roundNotOver():
+			if redo:
+				print("redo")
+			redo = False
 			
-		elif turnType == "hazard" or turnType == "h":
-			hazardValue()
-		elif turnType == "artifact":
-			tValue = None
-		else:
-			print("I'm sorry, ", turnType, " is not a recognized card type, let's start again")
-			pressEnter()
-			redo = True
+			#displaying information to help the player make a decision
+			textInfoMsg()
+			infomessage()
 			
-		line(1)
-		
-		if not redo:
-			if confirmation():
-				print("Okay, I will remove a ", tValue, " ", turnType, " card from the virtual draw pile")
-				print("  ")
-				if turnType == "treasure" or turnType == "t":
-					if (treasure[tValue] - 1) >= 0:
-						treasure[tValue] = treasure[tValue] - 1
-						treasureOut = treasureOut + 1
-						goldOwned = goldOwned + (tValue // playersLeft)
-						turn = turn + 1
-					else:
-						msg = "I'm sorry, but a " + str(tValue) + " wasn't in the deck to be turned over, let's start over"
-						gui.msgbox(msg)
-						gui.msgbox("Redoing turn", "Redoing Turn")
-				elif turnType == "hazard" or turnType == "h":
-					if (hazardsRound[tValue] - 1) >= 0:
-						hazardsRound[tValue] = hazardsRound[tValue] - 1
-						hazardsTable[tValue] = hazardsTable[tValue] + 1
-						turn = turn + 1
-					else:
-						gui.msgbox("I'm sorry, but the hazard you selected wasn't in the deck to be turned over")
-				elif turnType == "artifact":
-					if (artifacts - 1) >= 0:
-						artifacts = artifacts - 1
-						turn = turn + 1
-					else:
-						gui.msgbox("I'm sorry, but an artifact wasn't in the deck to be turned over")
-						gui.msgbox("Redoing turn", "Redoing Turn")
-						
-			else: 
-				gui.msgbox("Oh, sorry then, let's try this turn over.", "Redoing Turn")	
+			#asking how many players turned back
+			playersTurnBackMsg()
+
+			#asking what card was flipped over
+			typeCard()
+			
+			if turnType == "treasure" or turnType == "t":
+				tressureValue()
 				
-	line(5)
-	gui.msgbox("We are starting a new round!", "New Round!")
-	goldOwned = 0
-	artifacts = artifacts + 1
-	treasure = [0,1,1,1,1,2,0,2,0,1,0,2,0,1,1,1,0,1]
-	treasureOut = 0	 
-	hazardsTable = [0,0,0,0,0]
-	listTransfer(hazardsRound, hazardsGame)
-	turn = 1
+			elif turnType == "hazard" or turnType == "h":
+				hazardValue()
+				
+			elif turnType == "artifact":
+				tValue = None
+				
+			else:
+				print("I'm sorry, ", turnType, " is not a recognized card type, let's start again")
+				pressEnter()
+				redo = True
+				
+			#processing the card that was flipped over, assigning points to player ect.
+			if not redo:
+				if confirmation():
+					print("Okay, I will remove a ", tValue, " ", turnType, " card from the virtual draw pile")
+					print("  ")
+					if turnType == "treasure" or turnType == "t":
+						if (treasure[tValue] - 1) >= 0:
+							treasure[tValue] = treasure[tValue] - 1
+							treasureOut = treasureOut + 1
+							goldOwned = goldOwned + (tValue // playersLeft)
+							turn = turn + 1
+						else:
+							msg = "I'm sorry, but a " + str(tValue) + " wasn't in the deck to be turned over, let's start over"
+							gui.msgbox(msg)
+							gui.msgbox("Redoing turn", "Redoing Turn")
+					elif turnType == "hazard" or turnType == "h":
+						if (hazardsRound[tValue] - 1) >= 0:
+							hazardsRound[tValue] = hazardsRound[tValue] - 1
+							hazardsTable[tValue] = hazardsTable[tValue] + 1
+							turn = turn + 1
+						else:
+							gui.msgbox("I'm sorry, but the hazard you selected wasn't in the deck to be turned over")
+					elif turnType == "artifact":
+						if (artifacts - 1) >= 0:
+							artifacts = artifacts - 1
+							turn = turn + 1
+						else:
+							gui.msgbox("I'm sorry, but an artifact wasn't in the deck to be turned over")
+							gui.msgbox("Redoing turn", "Redoing Turn")
+							
+				else: 
+					gui.msgbox("Oh, sorry then, let's try this turn over.", "Redoing Turn")	
+					
+		gui.msgbox("We are starting a new round!", "New Round!")
+		goldOwned = 0
+		artifacts = artifacts + 1
+		treasure = [0,1,1,1,1,2,0,2,0,1,0,2,0,1,1,1,0,1]
+		treasureOut = 0	 
+		hazardsTable = [0,0,0,0,0]
+		listTransfer(hazardsRound, hazardsGame)
+		turn = 1
 		
 
 
